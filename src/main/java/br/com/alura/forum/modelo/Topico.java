@@ -4,24 +4,47 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
+@Entity
 public class Topico {
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	private String titulo;
 	private String mensagem;
 	private LocalDateTime dataCriacao = LocalDateTime.now();
+	//salva no banco de dados o nome da constante
+	@Enumerated(EnumType.STRING)
 	private StatusTopico status = StatusTopico.NAO_RESPONDIDO;
+	@ManyToOne
 	private Usuario autor;
+	//um curso tem varios topicos
+	//mas um topico pertence a um unico curso
+	@ManyToOne
 	private Curso curso;
+	@OneToMany(mappedBy = "topico")
 	private List<Resposta> respostas = new ArrayList<>();
-
+	
 	public Topico(String titulo, String mensagem, Curso curso) {
 		this.titulo = titulo;
 		this.mensagem = mensagem;
 		this.curso = curso;
 	}
+	
+	
 	
 }
